@@ -12,6 +12,7 @@ logger.level = 'debug';
 class Spider {
 
     constructor() {
+        this.concurrency = {concurrency: 3};
         this.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
     }
 
@@ -80,23 +81,6 @@ class Spider {
         });
     }
 
-    // async bootstrap() {
-    //     for (let url of this.urlList()) {
-    //         let jsonRes = await Spider.curl(url);
-    //         logger.info(`get a json ${url}`);
-    //         let imageList = this.parseImage(jsonRes);
-    //         for (let image of imageList) {
-    //             try {
-    //                 await this.downImage(image);
-    //                 logger.info(`download a image ${image.name}`);
-    //             } catch (err) {
-    //                 logger.error(`download image ${image.name} fail`);
-    //             }
-    //
-    //         }
-    //     }
-    // }
-
     async bootstrap() {
         for (let url of this.urlList()) {
             let jsonRes = await Spider.curl(url);
@@ -104,9 +88,9 @@ class Spider {
             let imageList = this.parseImage(jsonRes);
 
             Promise.map(imageList, (image) => {
-                return this.downImage(image);
-            }, {concurrency: 3}).then(() => {
-                console.log("done");
+                return this.downImage(image)
+            }, this.concurrency).then(() => {
+                logger.info(`download ${imageList} `);
             });
 
         }
