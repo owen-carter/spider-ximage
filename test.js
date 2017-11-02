@@ -2,37 +2,25 @@
  * Created by owen-carter on 2017/10/31.
  */
 
-
 'use strict';
-const SpiderKit = require('./utils/spiderKit');
-const should    = require('should');
+const Spider = require('./src/index.js');
+const should = require('should');
+const Promise = require('bluebird');
 
+describe('Spider Class', () => {
 
-describe('random seg', () => {
-    describe('#randomSeg()', () => {
-        it('should return a random seg', () => {
-            let randomSeg = SpiderKit.randomSeg();
-            should(randomSeg).be.instanceof(Number).and.lessThanOrEqual(255);
+    describe('#urlList()', () => {
+        it('should return a url list', () => {
+            let urlList = new Spider().urlList();
+            should(urlList.next()).be.instanceof(Object);
         });
     });
-});
 
-
-describe('random ip', () => {
-    describe('#randomIp()', () => {
-        it('should return a random ip', () => {
-            let randomIp = SpiderKit.randomIp();
-            should(randomIp.split('.')).be.instanceof(Array).and.have.lengthOf(4);
-        });
-    });
-});
-
-
-describe('random agent', () => {
-    describe('#randomAgent()', () => {
-        it('should return a random Agent', () => {
-            let randomAgent = SpiderKit.randomAgent();
-            should(randomAgent).be.instanceof(String);
+    describe('@curl()', () => {
+        it('should return a Pormise', async () => {
+            let url = (new Spider()).urlList().next().value;
+            let promise = await Spider.curl(url);
+            should(promise).be.a.json();
         });
     });
 });
