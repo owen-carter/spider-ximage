@@ -27,8 +27,12 @@
 
 ### Changelog
 + v1.0
-    - 可下载图片
+    - 可下载整站图片
 
 + v1.1
     - 引入bluebird
     - 使用Promise.map,并发下载，提高速度
+                                     
++ v1.2                           
+    - 存储图片Referer                 
+    - 存错图片地址以及详情   
