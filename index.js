@@ -1,16 +1,15 @@
 'use strict';
-const fs      = require('fs');
-const path    = require('path');
-const log4js  = require('log4js');
+const fs = require('fs');
+const path = require('path');
+const log4js = require('log4js');
 const request = require('request');
+const Promise = require('bluebird');
 
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
 class Spider {
-
-    static taskNumber = 10;
 
     constructor() {
         this.header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'}
@@ -30,7 +29,7 @@ class Spider {
 
     static curl(url) {
         let reqConfig = {
-            url   : url,
+            url: url,
             method: 'get',
             header: this.header
         };
@@ -47,11 +46,11 @@ class Spider {
 
     static wget(fileName, filePath) {
         let reqConfig = {
-            url   : filePath,
+            url: filePath,
             method: 'get',
             header: this.header
         };
-        let stream    = fs.createWriteStream('./images/' + fileName);
+        let stream = fs.createWriteStream('./images/' + fileName);
         return new Promise((resolve, reject) => {
             request(reqConfig)
                 .on('error', (err) => {
@@ -76,25 +75,40 @@ class Spider {
         return jsonObject.result.map((item) => {
             return {
                 name: item.id,
-                url : item.large_image
+                url: item.large_image
             }
         });
     }
+
+    // async bootstrap() {
+    //     for (let url of this.urlList()) {
+    //         let jsonRes = await Spider.curl(url);
+    //         logger.info(`get a json ${url}`);
+    //         let imageList = this.parseImage(jsonRes);
+    //         for (let image of imageList) {
+    //             try {
+    //                 await this.downImage(image);
+    //                 logger.info(`download a image ${image.name}`);
+    //             } catch (err) {
+    //                 logger.error(`download image ${image.name} fail`);
+    //             }
+    //
+    //         }
+    //     }
+    // }
 
     async bootstrap() {
         for (let url of this.urlList()) {
             let jsonRes = await Spider.curl(url);
             logger.info(`get a json ${url}`);
             let imageList = this.parseImage(jsonRes);
-            for (let image of imageList) {
-                try {
-                    await this.downImage(image);
-                    logger.info(`download a image ${image.name}`);
-                } catch (err) {
-                    logger.error(`download image ${image.name} fail`);
-                }
 
-            }
+            Promise.map(imageList, (image) => {
+                return this.downImage(image);
+            }, {concurrency: 3}).then(() => {
+                console.log("done");
+            });
+
         }
     }
 
