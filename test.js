@@ -17,11 +17,20 @@ describe('Spider Class', () => {
     });
 
     describe('@curl()', () => {
-        it('should return a Pormise', async () => {
+        it('should return a json', async () => {
             let url = (new Spider()).urlList().next().value;
             let promise = await Spider.curl(url);
             promise.should.be.a.json();
         });
     });
+
+    describe('@wget()', () => {
+        it('should download a file', async () => {
+            let url = (new Spider()).urlList().next().value;
+            let promise = await Spider.curl(url);
+            promise.should.be.a.json();
+        });
+    });
+
 
 });
