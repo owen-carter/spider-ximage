@@ -1,5 +1,5 @@
 # spider-ximage
-> 图片爬虫
+> www.ximage.pro站点的爬虫,编写目的在于学习promise,以及并发，使用成熟的Pormise库的使用
 
 ### About
 - 爬图片
