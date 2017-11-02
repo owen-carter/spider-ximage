@@ -20,7 +20,7 @@ describe('Spider Class', () => {
         it('should return a Pormise', async () => {
             let url = (new Spider()).urlList().next().value;
             let promise = await Spider.curl(url);
-            should(promise).be.a.json();
+            promise.should.be.a.json();
         });
     });
 
