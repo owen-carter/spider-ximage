@@ -90,7 +90,7 @@ class Spider {
             Promise.map(imageList, (image) => {
                 return this.downImage(image)
             }, this.concurrency).then(() => {
-                logger.info(`download ${imageList} `);
+                logger.info(`download ${imageList.length} images`);
             });
 
         }
