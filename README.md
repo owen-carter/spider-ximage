@@ -7,6 +7,11 @@
 - 存错图片地址以及详情
 - 存储图片Referer
 
+### How to start?
+```bash
+curl -o- https://raw.githubusercontent.com/owen-carter/spider-ximage/master/start.sh | bash
+```
+
 ### About promise
 ```ecmascript 6
     async bootstrap() {
