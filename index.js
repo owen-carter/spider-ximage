@@ -23,7 +23,7 @@ class Spider {
     * urlList() {
         let i;
         let baseUrl = 'http://www.ximage.pro/photos.json?page=';
-        for (i = 312; i, 1000000; i++) {
+        for (i = 1; i, 1000000; i++) {
             yield (baseUrl + i)
         }
     }
@@ -65,37 +65,6 @@ class Spider {
         })
     }
 
-    static taskScheduler(tasks = []) {
-        let taskNumber = 10;
-        return new Promise(async (resolve, reject) => {
-            await Spider.fetch('', '');
-            taskNumber--;
-            if (taskNumber < Spider.taskNumber) {
-                resolve(void(0))
-            }
-        })
-    }
-
-    static fetch(fileName, filePath) {
-        let reqConfig = {
-            url   : filePath,
-            method: 'get',
-            header: this.header
-        };
-        let stream    = fs.createWriteStream('./images/' + fileName);
-        return new Promise((resolve, reject) => {
-            request(reqConfig)
-                .on('error', (err) => {
-                    logger.error(`wget file err: ${err}`);
-                    reject(err);
-                })
-                .pipe(stream)
-                .on('close', () => {
-                    resolve(void(0));
-                });
-        })
-    }
-
     downImage(image) {
         return Spider.wget(image.name + '.jpg', image.url)
     }
@@ -128,16 +97,6 @@ class Spider {
             }
         }
     }
-
-    async start() {
-        for (let url of this.urlList()) {
-            let jsonRes = await Spider.curl(url);
-            logger.info(`get a json ${url}`);
-            let imageList = this.parseImage(jsonRes);
-            await Spider.taskScheduler(imageList);
-        }
-    }
-
 
     run() {
         this.init();
