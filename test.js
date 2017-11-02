@@ -23,4 +23,5 @@ describe('Spider Class', () => {
             should(promise).be.a.json();
         });
     });
+
 });
